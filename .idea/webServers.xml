@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="718ec19d-cf2b-4de7-9300-92c4451a913c" name="lcheng@122.207.108.8:11222 password (11) (project level)">
+        <fileTransfer accessType="SFTP" host="122.207.108.8" port="11222" sshConfigId="e43ae289-c025-4f4c-9585-0dbac4e4bcda" sshConfig="lcheng@122.207.108.8:11222 password" />
+      </webServer>
+      <webServer id="74e630d6-6ddd-4935-ab30-4089d8be0000" name="lcheng@122.207.108.8:11222 password (13) (project level)">
+        <fileTransfer accessType="SFTP" host="122.207.108.8" port="11222" sshConfigId="e43ae289-c025-4f4c-9585-0dbac4e4bcda" sshConfig="lcheng@122.207.108.8:11222 password" />
+      </webServer>
+      <webServer id="604a8e26-730c-46cf-abca-c7a26c612eed" name="lcheng@122.207.108.8:11222 password (13) (project level) (1)">
+        <fileTransfer accessType="SFTP" host="122.207.108.8" port="11222" sshConfigId="e43ae289-c025-4f4c-9585-0dbac4e4bcda" sshConfig="lcheng@122.207.108.8:11222 password" />
+      </webServer>
+      <webServer id="feae5f7a-bbec-4799-8d48-8ff5636ebee3" name="lcheng@122.207.108.8:11222 password (22) (project level)">
+        <fileTransfer accessType="SFTP" host="122.207.108.8" port="11222" sshConfigId="e43ae289-c025-4f4c-9585-0dbac4e4bcda" sshConfig="lcheng@122.207.108.8:11222 password" />
+      </webServer>
+      <webServer id="71d25585-497c-46ed-927f-04ac2d843513" name="lcheng@122.207.108.8:11222 password (23) (project level)">
+        <fileTransfer accessType="SFTP" host="122.207.108.8" port="11222" sshConfigId="e43ae289-c025-4f4c-9585-0dbac4e4bcda" sshConfig="lcheng@122.207.108.8:11222 password" />
+      </webServer>
+    </option>
+  </component>
+</project>
