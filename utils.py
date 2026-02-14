@@ -130,18 +130,15 @@ def construct_interaction_nanostring_KNN(adata, rad_cutoff=80):
     for it in range(indices.shape[0]):
         KNN_list.append(pd.DataFrame(zip([it] * indices[it].shape[0], indices[it], distances[it])))
 
-    ## 转变成邻接矩阵， 邻接矩阵开始
-    # 初始化邻接矩阵 (如果只需要二进制邻接关系，用 0 填充)
     N = position.shape[0]
     adj_matrix = np.zeros((N, N))
-    # 遍历每个样本，填充邻接矩阵
+
     for i in range(N):
         for j, dist in zip(indices[i], distances[i]):
             if i == j:
                 adj_matrix[i, j] = 0
             else:
-                adj_matrix[i, j] = 1  # adj_matrix[i, j] = dist 使用距离作为权重，或者用 adj_matrix[i, j] = 1 表示邻接
-    # 包括自身graph_neigh
+                adj_matrix[i, j] = 1  
     interaction = adj_matrix + np.eye(adj_matrix.shape[0])
 
     adj_matrix = adj_matrix + adj_matrix.T
@@ -201,7 +198,6 @@ def get_feature(adata, deconvolution=False):
 
 def get_brain_img(opt, adata, net="resnet50"):
     # img = cv2.imread(os.path.join(opt.root, 'spatial/full_image.tif'))
-    # # 颜色转变为RGB格式的
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # if opt.use_gray:
     #     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -216,11 +212,10 @@ def get_brain_img(opt, adata, net="resnet50"):
     # patchs = np.stack(patchs)
     # df = pd.DataFrame(patchs, index=adata.obs.index)
     # adata.obsm['img'] = df
-    # # anndata中Dataframe数据会报错
     # adata.obsm['img'] = adata.obsm['img'].to_numpy()
 
 
-    # 读取.npy文件并赋值给 adata.obsm['imgs_feature']
+
     # feature_filename = f'/home/lcheng/wangdaoyuan/code/equation4/features/Human_breast_cancer/{net}_feature_Human_breast_cancer.npy'
     # feature_filename = f'/home/lcheng/wangdaoyuan/code/equation4/features/Mouse_anterior_brain/{net}_feature_Mouse_anterior_brain.npy'
     # feature_filename = f'/home/lcheng/wangdaoyuan/code/equation4/features/Mouse_coronal_brain/{net}_feature_Mouse_coronal_brain.npy'
@@ -240,7 +235,7 @@ def get_brain_img(opt, adata, net="resnet50"):
 
 def get_img(opt, id, adata, net ="resnet50"):
     # img = cv2.imread(os.path.join(opt.root, id, 'spatial/full_image.tif'))
-    # # 颜色转变为RGB格式的
+
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # if opt.use_gray:
     #     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -255,9 +250,9 @@ def get_img(opt, id, adata, net ="resnet50"):
     # patchs = np.stack(patchs)
     # df = pd.DataFrame(patchs, index=adata.obs.index)
     # adata.obsm['img'] = df
-    # # anndata中Dataframe数据会报错
+
     # adata.obsm['img'] = adata.obsm['img'].to_numpy()
-    # # 读取.npy文件并赋值给 adata.obsm['imgs_feature']
+
 
     # feature_filename = f'/home/lcheng/wangdaoyuan/code/eq4/features/DLPFC/resnet50_feature_{id}.npy'
     feature_filename = f'/home/lcheng/wangdaoyuan/code/equation5/features/DLPFC/{net}_feature_{id}.npy'
@@ -580,18 +575,15 @@ def Cal_Spatial_Net(adata, rad_cutoff=None, k_cutoff=None, model='Radius', verbo
         for it in range(indices.shape[0]):
             KNN_list.append(pd.DataFrame(zip([it] * indices.shape[1], indices[it, :], distances[it, :])))
 
-    ## 转变成邻接矩阵， 邻接矩阵开始
-    # 初始化邻接矩阵 (如果只需要二进制邻接关系，用 0 填充)
     N = coor.shape[0]
     adj_matrix = np.zeros((N, N))
-    # 遍历每个样本，填充邻接矩阵
+
     for i in range(N):
         for j, dist in zip(indices[i], distances[i]):
             if i == j:
                 adj_matrix[i, j] = 0
             else:
-                adj_matrix[i, j] = 1  # adj_matrix[i, j] = dist 使用距离作为权重，或者用 adj_matrix[i, j] = 1 表示邻接
-    # 包括自身graph_neigh
+                adj_matrix[i, j] = 1  
     graph_neigh = adj_matrix + np.eye(adj_matrix.shape[0])
 
     adj_matrix = adj_matrix + adj_matrix.T
@@ -600,12 +592,10 @@ def Cal_Spatial_Net(adata, rad_cutoff=None, k_cutoff=None, model='Radius', verbo
     if model == 'KNN':
         graph_neigh, adj_matrix = construct_interaction(adata)
 
-    # 转换为 Pandas DataFrame（如果需要）
+
     adj_coor = pd.DataFrame(adj_matrix)
     graph_neigh_df = pd.DataFrame(graph_neigh)
-    ## 邻接矩阵结束
 
-    # 基于特征构建邻接矩阵
     if isinstance(adata.X, csc_matrix) or isinstance(adata.X, csr_matrix):
         adj_feat = kneighbors_graph(adata.X.todense(), 6, mode="connectivity", metric="correlation", include_self=False)
     else:
@@ -615,7 +605,7 @@ def Cal_Spatial_Net(adata, rad_cutoff=None, k_cutoff=None, model='Radius', verbo
     graph_neigh_feat = adj_feat + np.eye(adj_feat.shape[0])
     adj_feat = adj_feat + adj_feat.T
     adj_feat = np.where(adj_feat > 1, 1, adj_feat)
-    # 基于特征构建邻接矩阵
+
     adj_img = kneighbors_graph(adata.obsm['imgs_feature'], 6, mode="connectivity", metric="correlation",
                                include_self=False)
     adj_img = np.array(adj_img.todense())
@@ -628,7 +618,7 @@ def Cal_Spatial_Net(adata, rad_cutoff=None, k_cutoff=None, model='Radius', verbo
 
     Spatial_Net = KNN_df.copy()
     Spatial_Net = Spatial_Net.loc[Spatial_Net['Distance'] > 0,]
-    # 边的索引
+
     e0 = Spatial_Net['Cell1'].to_numpy()
     e1 = Spatial_Net['Cell2'].to_numpy()
     edgeList = np.array((e0, e1))
@@ -685,29 +675,21 @@ def construct_interaction(adata, n_neighbors=3):
 
 
 def compute_ot_loss(P, Q, reg=0.01):
-    """
-    计算 P 和 Q 之间的最优传输损失 (Sinkhorn 距离)
 
-    :param P: (n, c) 源分布
-    :param Q: (m, c) 目标分布
-    :param reg: Sinkhorn 正则化参数
-    :return: OT 损失值（标量）
-    """
     n, c = P.shape
     m, _ = Q.shape
 
-    # 归一化 P 和 Q 使其行和为 1
+
     P = P / P.sum(dim=1, keepdim=True)  # (n, c)
     Q = Q / Q.sum(dim=1, keepdim=True)  # (m, c)
 
-    # 计算成本矩阵 (n, m)，使用欧几里得距离平方
+
     cost_matrix = torch.cdist(P, Q, p=2) ** 2  # (n, m)
 
-    # 均匀权重（如果有不同权重，可手动指定）
+
     P_weights = torch.full((n,), 1/n, dtype=torch.float32)  # (n,)
     Q_weights = torch.full((m,), 1/m, dtype=torch.float32)  # (m,)
 
-    # 计算 Sinkhorn 距离（OT 损失）
     ot_loss = ot.sinkhorn2(P_weights, Q_weights, cost_matrix, reg).sum()
 
     return ot_loss
@@ -720,7 +702,6 @@ L2norm = nn.functional.normalize
 
 
 def kernel_affinity(z, temperature=0.1, step: int = 3):
-    # # PAC降维
     # pca = PCA(n_components=20, random_state=42)
     # z = pca.fit_transform(z)
 
