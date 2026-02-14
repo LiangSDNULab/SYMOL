@@ -28,7 +28,7 @@ class GraphConvolution(nn.Module):
 
     def forward(self, input, adj):
         support = torch.mm(input, self.weight)
-        output = torch.mm(adj, support)# 如果稀疏就用torch.spmm，否则用torch.mm
+        output = torch.mm(adj, support)#
         if self.bias is not None:
             return output + self.bias
         else:
@@ -144,7 +144,7 @@ class ClusteringLayer(nn.Module):
         torch.nn.init.kaiming_uniform_(self.clusters, a=math.sqrt(5))
 
     def forward(self, inputs):
-        # 确保 alpha 在相同设备上
+        #
         alpha = torch.tensor(self.alpha, device=inputs.device)
         q = 1.0 / (1.0 + (torch.sum(torch.square(torch.unsqueeze(inputs, dim=1) - self.clusters), dim=2) / alpha))
         q = torch.pow(q, (self.alpha + 1.0) / 2.0)
