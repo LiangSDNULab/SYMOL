@@ -39,7 +39,7 @@ os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
 def train_10x_Human_breast_cancer(opt, r=0):
     seed_everything(opt.seed)
 
-    #保存数据
+    #
     if not os.path.exists(opt.save_path):
         os.makedirs(opt.save_path)
 
@@ -83,10 +83,10 @@ def train_10x_Human_breast_cancer(opt, r=0):
     out_dim = 64
     img_dim = adata.obsm['img_feat2'].shape[1]
     adata.obsm['img_feat'] = adata.obsm['img_feat2']
-    # 设置种子
+    # 
     seed_everything(opt.seed)
     model = Pretrain_graph(in_dim, img_dim, out_dim, opt.ncluster).to(opt.device)
-    # 优化器
+    #
     optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, weight_decay=opt.weight_decay)
 
 
@@ -107,8 +107,7 @@ def train_10x_Human_breast_cancer(opt, r=0):
             embedding = pca.fit_transform(emb.detach().cpu().numpy())
             adata.obsm['pred'] = embedding
 
-            ## k-means聚类初始化
-            # 设置种子
+            ## k-means
             seed_everything(opt.seed)
             kmeans = KMeans(n_clusters=opt.ncluster, n_init=100)
             kmeans.fit_predict(embedding)
@@ -118,7 +117,6 @@ def train_10x_Human_breast_cancer(opt, r=0):
             adata.obs['domain'] = y
             truth = np.array(adata[~pd.isnull(adata.obs['ground_truth'])].obs['ground_truth'], dtype=str)
             ARI = adjusted_rand_score(y, truth)
-            print('初始化聚类中心的ARI: %.4f' % ARI)
 
             emb11 = emb[~pd.isnull(adata.obs['ground_truth'])]
             centers = computeCentroids(emb11.cpu().detach().numpy(), y)
@@ -148,13 +146,13 @@ def train_10x_Human_breast_cancer(opt, r=0):
                 model.eval()
                 gae, gaeout, gz, gzout, iae, iaeout, iz, izout, emb, emb1, emb2, q, q1, q2 = model(gene, img, adj)
                 adata.obsm['gzout'] = gzout.detach().cpu().numpy()
-                # PAC降维
+                # PAC
                 pca = PCA(n_components=20, random_state=42)
                 embedding = pca.fit_transform(emb.detach().cpu().numpy())
                 adata.obsm['pred'] = embedding
 
                 if opt.cluster_method2 == 'mclust':
-                    # 设置种子
+                    # 
                     seed_everything(opt.seed)
                     mclust_R(adata, opt.ncluster, modelNames='EEE', used_obsm='pred', random_seed=opt.seed)
                     adata.obs['domain'] = adata.obs['mclust']
@@ -175,11 +173,11 @@ def train_10x_Human_breast_cancer(opt, r=0):
                     print('mclust HS: %.4f' % HS)
 
 
-    print("指标保存完成！")
+    print(".................")
 
 def train_10x_Human_breast_cancer_mutifigure(opt, r=0):
     seed_everything(opt.seed)
-    #保存数据
+    #
     if not os.path.exists(opt.save_path):
         os.makedirs(opt.save_path)
 
@@ -223,10 +221,10 @@ def train_10x_Human_breast_cancer_mutifigure(opt, r=0):
     img_dim1 = adata.obsm['img_feat1'].shape[1]
     img_dim2 = adata.obsm['img_feat2'].shape[1]
     img_dim3 = adata.obsm['img_feat3'].shape[1]
-    # 设置种子
+    # 
     seed_everything(opt.seed)
     model = Pretrain_graph_figure(in_dim, img_dim, img_dim1, img_dim2, img_dim3, out_dim, opt.ncluster).to(opt.device)
-    # 优化器
+    #
     optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, weight_decay=opt.weight_decay)
 
     for epoch in tqdm(range(opt.epochs)):
@@ -248,8 +246,7 @@ def train_10x_Human_breast_cancer_mutifigure(opt, r=0):
             embedding = pca.fit_transform(emb.detach().cpu().numpy())
             adata.obsm['pred'] = embedding
 
-            ## k-means聚类初始化
-            # 设置种子
+            ## k-means
             seed_everything(opt.seed)
             kmeans = KMeans(n_clusters=opt.ncluster, n_init=100)
             kmeans.fit_predict(embedding)
@@ -259,7 +256,6 @@ def train_10x_Human_breast_cancer_mutifigure(opt, r=0):
             adata.obs['domain'] = y
             truth = np.array(adata[~pd.isnull(adata.obs['ground_truth'])].obs['ground_truth'], dtype=str)
             ARI = adjusted_rand_score(y, truth)
-            print('初始化聚类中心的ARI: %.4f' % ARI)
 
             emb11 = emb[~pd.isnull(adata.obs['ground_truth'])]
             centers = computeCentroids(emb11.cpu().detach().numpy(), y)
@@ -290,13 +286,13 @@ def train_10x_Human_breast_cancer_mutifigure(opt, r=0):
                 model.eval()
                 gae, gaeout, gz, gzout, iae, iaeout, iz, izout, emb, emb1, emb2, q, q1, q2, img = model(gene, img1, img2, img3, adj)
                 adata.obsm['gzout'] = gzout.detach().cpu().numpy()
-                # PAC降维
+                # PAC
                 pca = PCA(n_components=20, random_state=42)
                 embedding = pca.fit_transform(emb.detach().cpu().numpy())
                 adata.obsm['pred'] = embedding
 
                 if opt.cluster_method2 == 'mclust':
-                    # 设置种子
+                    # 
                     seed_everything(opt.seed)
                     mclust_R(adata, opt.ncluster, modelNames='EEE', used_obsm='pred', random_seed=opt.seed)
                     adata.obs['domain'] = adata.obs['mclust']
@@ -316,7 +312,7 @@ def train_10x_Human_breast_cancer_mutifigure(opt, r=0):
                     print('mclust FMI: %.4f' % FMI)
                     print('mclust HS: %.4f' % HS)
                     print(len(adata.obs['domain'].unique()))
-    print("指标保存完成！")
+    print("......")
 
 
 import torch.nn as nn
@@ -435,7 +431,7 @@ def res_search(opt, adata_pred, ncluster, seed, iter=200):
         i += 1
         res = (start + end) / 2
         # print(res)
-        # 设置种子
+        # 
         seed_everything(opt.seed)
         sc.tl.leiden(adata_pred, random_state=seed, resolution=res)
         count = len(set(adata_pred.obs['leiden']))
@@ -457,7 +453,7 @@ def res_search_louvain(opt, adata_pred, ncluster, seed, iter=200):
         i += 1
         res = (start + end) / 2
         # print(res)
-        # 设置种子
+        # 
         seed_everything(opt.seed)
         sc.tl.louvain(adata_pred, random_state=seed, resolution=res)
         # sc.tl.leiden(adata_pred, random_state=seed, resolution=res)
