@@ -13,14 +13,14 @@ from sklearn.metrics import (
 from scipy.optimize import linear_sum_assignment
 
 
-# 1. 读取标签
+# 1. 
 def read_labels_from_file(file_path):
     with open(file_path, 'r') as file:
         labels = [int(line.strip()) for line in file if line.strip().isdigit()]
     return np.array(labels)
 
 
-# 2. 映射标签
+# 2. 
 def map_labels(true_labels, predicted_labels):
     true_labels = np.array(true_labels)
     predicted_labels = np.array(predicted_labels)
@@ -39,7 +39,7 @@ def map_labels(true_labels, predicted_labels):
     return mapped_predicted_labels
 
 
-# 3. 计算指标
+# 3. 
 def evaluate_clustering(true_labels, predicted_labels):
     results = {
         "Mutual Information (MI)": mutual_info_score(true_labels, predicted_labels),
@@ -56,7 +56,7 @@ def evaluate_clustering(true_labels, predicted_labels):
         print(f"{key}: {value:.4f}")
 
 
-# 4. 主程序
+# 4. 
 true_labels = read_labels_from_file('../Data/HLN/GT_labels.txt')
 predicted_labels = read_labels_from_file('../results/HLN.txt')
 
