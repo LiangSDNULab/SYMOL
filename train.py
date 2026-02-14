@@ -13,18 +13,18 @@ if __name__ == "__main__":
                                  'Human_breast_cancer, Mouse_anterior_brain, Mouse_coronal_brain, Human_breast_cancer_cycle Human_colorectal_cance')
     parser.add_argument('--device', type=str, default='cuda:0' if torch.cuda.is_available() else 'cpu',
                         help='Device to use for computation (default: cuda if available, otherwise cpu)')#cuda:2
-    parser.add_argument('--lr', type=float, default=1e-3)#default=1e-3
+    parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--root', type=str, default='./data/nanostring')
-    parser.add_argument('--epochs', type=int, default=2000)#default=2000
+    parser.add_argument('--epochs', type=int, default=2000)
     parser.add_argument('--id', type=str, default='fov1')
     parser.add_argument('--img_name', type=str, default='F001')
-    parser.add_argument('--seed', type=int, default=2024)#1234
-    parser.add_argument('--batch_size', type=int, default=512)  # 256 5103
+    parser.add_argument('--seed', type=int, default=2024)
+    parser.add_argument('--batch_size', type=int, default=512)
     parser.add_argument('--save_path', type=str, default='./checkpoint/nanostring_final')
     parser.add_argument('--ncluster', type=int, default=8)
     parser.add_argument('--refinement', type=bool, default=False)
     parser.add_argument('--use_gray', type=float, default=0)
-    parser.add_argument('--test_only', type=int, default=0)#default=0 #0表示训练，1表示测试
+    parser.add_argument('--test_only', type=int, default=0)
     parser.add_argument('--cluster_method', type=str, default='leiden', help='leiden or mclust')
     parser.add_argument('--cluster_method1', type=str, default='louvain', help='leiden or mclust or louvain')
     parser.add_argument('--cluster_method2', type=str, default='mclust', help='leiden or mclust or louvain')
